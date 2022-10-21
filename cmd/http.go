@@ -10,7 +10,8 @@ import (
 )
 
 type httpCmdFlags struct {
-	Url string
+	Url     string
+	Timeout string
 }
 
 type httpClientData struct {
@@ -28,6 +29,7 @@ var httpFlags httpCmdFlags
 func init() {
 	rootCmd.AddCommand(httpCmd)
 	httpCmd.Flags().StringVarP(&httpFlags.Url, "url", "u", "https://www.google.com", "Url to HTTP server to test.")
+	httpCmd.Flags().StringVarP(&httpFlags.Timeout, "timeout", "t", "10s", "HTTP client time out duration.")
 }
 
 var httpCmd = &cobra.Command{
@@ -89,13 +91,15 @@ func httpClient(data *httpClientData, interval int, timer time.Duration) {
 	s := time.Duration(interval) * time.Millisecond
 	countMax = (timer * time.Millisecond).Milliseconds() / int64(s)
 
+	t, _ := time.ParseDuration(httpFlags.Timeout)
+
 	for {
 		data.count++
 		start := time.Now()
 		transCfg := &http.Transport{
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		}
-		client := &http.Client{Transport: transCfg}
+		client := &http.Client{Transport: transCfg, Timeout: t}
 		response, err := client.Get(httpFlags.Url)
 		if err != nil {
 			data.errors++
