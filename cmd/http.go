@@ -29,7 +29,7 @@ var httpFlags httpCmdFlags
 func init() {
 	rootCmd.AddCommand(httpCmd)
 	httpCmd.Flags().StringVarP(&httpFlags.Url, "url", "u", "https://www.google.com", "Url to HTTP server to test.")
-	httpCmd.Flags().StringVarP(&httpFlags.Timeout, "timeout", "t", "10s", "HTTP client time out duration.")
+	httpCmd.Flags().StringVarP(&httpFlags.Timeout, "timeout", "t", "2s", "HTTP client time out duration.")
 }
 
 var httpCmd = &cobra.Command{
