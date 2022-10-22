@@ -104,6 +104,7 @@ func httpClient(data *httpClientData, interval int, timer time.Duration) {
 		if err != nil {
 			data.errors++
 		} else {
+			response.Body.Close()
 			if response.StatusCode != 200 {
 				data.errors++
 			} else {
@@ -124,7 +125,6 @@ func httpClient(data *httpClientData, interval int, timer time.Duration) {
 				}
 			}
 		}
-		response.Body.Close()
 
 		if data.count >= countMax {
 			break
